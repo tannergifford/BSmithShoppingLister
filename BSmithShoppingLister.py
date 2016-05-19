@@ -7,16 +7,9 @@ from tkinter import messagebox
 
 # Variables
 recipeLoc = "C:/Users/" + os.getlogin() + "/Documents/BeerSmith2/Recipe.bsmx"
+root = Tk()
 
 # Functions
-# Create TK
-
-root = Tk()
-root.geometry("350x350")
-root.title("BSmith Recipe Creator")
-
-
-
 def openFile():
     recipeLocation = filedialog.askopenfilename(filetypes=(("Beersmith Recipe Files", "*.bsmx"), ("All files", "*.*")))
     if recipeLocation:
@@ -60,11 +53,11 @@ def BuildList():
 
     match = regex.search(text)
     if match:
-        messagebox.showinfo("Done", active + " recipe found")
+        messagebox.showinfo("Recipe Found", active + " recipe found")
+        text = match.group(0)
     else:
-        messagebox.showerror("Selected", "No match")
-
-    text = match.group(0)
+        messagebox.showerror("Selected", "No match or Selection")
+        return
 
     # Grain
     regex = re.compile("(<Grain>.*?</Grain>)", re.MULTILINE|re.DOTALL)
@@ -147,7 +140,6 @@ def BuildList():
         out_file.write("Quantity: " + str(round(hops_q_dict[hop], 2)) + "oz\n")
         out_file.write("\n")
 
-
     # Yeast
     regex = re.compile("(<Yeast>.*?</Yeast>)", re.MULTILINE|re.DOTALL)
     yeast_l_dict = {}
@@ -186,7 +178,6 @@ def BuildList():
         out_file.write("Starter Size: " + str(round(yeast_s_dict[yeasts],2)) + "L\n")
         out_file.write("\n")
 
-
     # Misc
     regex = re.compile("(<Misc>.*?</Misc>)", re.MULTILINE|re.DOTALL)
     out_file.write("Miscellaneous: \n")
@@ -200,41 +191,50 @@ def BuildList():
         out_file.write("Use: " + misc_use + "\n")
         out_file.write("Quantity: " + misc_quantity[:-5] + "\n")
 
+	# Close up shop
     out_file.close()
     os.startfile(directory + active+"_recipe.txt")
+	
+# Set up main window
+root.geometry("350x400")
+root.resizable(0,0)
+root.configure(background='#595959')
+root.iconbitmap('icon.ico')
+root.title("BSmith Shopping Lister")
 
-button1 = Button(root, text="Browse", command=openFile)
-button2 = Button(root, text="List Recipes", command=RecipeList)
-button3 = Button(root, text="Build List", command=BuildList)
-textbox = Entry(root, width=200)
-textbox.insert(END,recipeLoc)
+# Create recipe file location textbox
+textbox = Entry(root, bg="#d9d9d9", width=50)
+if os.path.exists(recipeLoc):
+    textbox.insert(END,recipeLoc)
+else:
+    textbox.insert(END,"Browse for Beer Smith Recipes")
+textbox.pack(pady=5)
 
-textbox.pack()
-button1.pack()
-button2.pack()
+# Create Browse button
+Button(root, text="Browse", bg="#808080", command=openFile).pack(pady=5)
 
+# Create List Recipes button
+Button(root, text="List Recipes", bg="#808080", command=RecipeList).pack(pady=5)
+
+# Create frame for listbox
 frame = Frame(root, bd=2, relief=SUNKEN)
-
 frame.grid_rowconfigure(0, weight=1)
 frame.grid_columnconfigure(0, weight=1)
-
 xscrollbar = Scrollbar(frame, orient=HORIZONTAL)
 xscrollbar.grid(row=1, column=0, sticky=E+W)
-
 yscrollbar = Scrollbar(frame)
 yscrollbar.grid(row=0, column=1, sticky=N+S)
-
-listbox = Listbox(frame, bd=0, width=200,
-            xscrollcommand=xscrollbar.set,
-            yscrollcommand=yscrollbar.set)
-
+listbox = Listbox(frame, bd=0, width=50,
+    bg="#d9d9d9",
+    height=14,
+    xscrollcommand=xscrollbar.set,
+    yscrollcommand=yscrollbar.set)
 listbox.grid(row=0, column=0, sticky=N+S+E+W)
-
 xscrollbar.config(command=listbox.xview)
 yscrollbar.config(command=listbox.yview)
+frame.pack(pady=5)
 
-frame.pack()
-button3.pack()
-
+# Create Build button
+Button(root, text="Build Shopping List", bg="#808080", command=BuildList).pack(pady=5)
 
 root.mainloop()
