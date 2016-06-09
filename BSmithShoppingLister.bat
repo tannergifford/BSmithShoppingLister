@@ -1,3 +1,2 @@
 @echo off
-python BSmithShoppingLister.py
-pause
+C:\Python32\pythonw.exe BSmithShoppingLister.py

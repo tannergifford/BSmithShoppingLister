@@ -72,6 +72,8 @@ def BuildList():
         grain_type = (re.search(r"<F_G_TYPE>(.+)</F_G_TYPE>", grain)).group(1)
         if grain_type == "1":
             grain_type = "LME"
+        elif grain_type == "3":
+            grain_type = "Adjunct"
         elif grain_type == "4":
             grain_type = "DME"
         elif grain_type == "0":
