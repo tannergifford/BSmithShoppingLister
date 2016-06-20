@@ -189,9 +189,13 @@ def BuildList():
         misc_name = (re.search(r"<F_M_NAME>(.+)</F_M_NAME>", misc)).group(1)
         misc_use = (re.search(r"<F_M_USE_FOR>(.+)</F_M_USE_FOR>", misc)).group(1)
         misc_quantity = (re.search(r"<F_M_AMOUNT>(.+)</F_M_AMOUNT>", misc)).group(1)
+        misc_units = (re.search(r"<F_M_UNITS>(.+)</F_M_UNITS>", misc)).group(1)
+        units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
+        unit = units_dict[misc_units]
         out_file.write("Name: " + misc_name + "\n")
         out_file.write("Use: " + misc_use + "\n")
-        out_file.write("Quantity: " + misc_quantity[:-5] + "\n")
+        out_file.write("Quantity: " + misc_quantity[:-5] + " " + unit +"\n")
+        out_file.write("\n")
 
 	# Close up shop
     out_file.close()
