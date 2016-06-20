@@ -65,21 +65,13 @@ def BuildList():
     grain_c_dict = {}
     grain_o_dict = {}
     grain_q_dict = {}
+    grain_type_dict = {'0':'Grain', '1':'LME', '2':'Sugar', '3':'Adjunct', '4':'DME'}
     out_file.write("\nGrain: \n")
     for match in regex.finditer(text,re.S):
         grain = regex.search(match.group(1))
         grain = grain.group(0)
         grain_type = (re.search(r"<F_G_TYPE>(.+)</F_G_TYPE>", grain)).group(1)
-        if grain_type == "1":
-            grain_type = "LME"
-        elif grain_type == "3":
-            grain_type = "Adjunct"
-        elif grain_type == "4":
-            grain_type = "DME"
-        elif grain_type == "0":
-            grain_type = "Grain"
-        else:
-            grain_type = "Unknown"
+        grain_type = grain_type_dict[grain_type]
         grain_name = (re.search(r"<F_G_NAME>(.+)</F_G_NAME>", grain)).group(1)
         grain_origin = re.search(r"<F_G_ORIGIN>(.+)</F_G_ORIGIN>", grain)
         if grain_origin:
