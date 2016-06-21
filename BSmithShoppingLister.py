@@ -92,12 +92,12 @@ def BuildList():
             grain_o_dict[grain_name] = grain_origin
         if grain_name not in grain_c_dict:
             grain_c_dict[grain_name] = grain_color
-    for grains in grain_q_dict:
-        out_file.write("Name: " + grains + "\n")
-        out_file.write("Origin: " + grain_o_dict[grains] + "\n")
-        out_file.write("Type: " + grain_t_dict[grains] +"\n")
-        out_file.write("Color: " + str(grain_c_dict[grains]) + " SRM\n")
-        out_file.write("Quantity: " + str(round(grain_q_dict[grains],2)) + "oz\n")
+    for key, value in sorted(grain_q_dict.items(), key=lambda item: (item[1], item[0])):
+        out_file.write("Name: " + key + "\n")
+        out_file.write("Origin: " + grain_o_dict[key] + "\n")
+        out_file.write("Type: " + grain_t_dict[key] +"\n")
+        out_file.write("Color: " + str(grain_c_dict[key]) + " SRM\n")
+        out_file.write("Quantity: " + str(round(grain_q_dict[key],2)) + "oz\n")
         out_file.write("\n")
 
     # Hops
@@ -127,11 +127,10 @@ def BuildList():
             hops_q_dict[hops_name] = new_quantity
         if hops_name not in hops_o_dict:
             hops_o_dict[hops_name] = hops_origin
-
-    for hop in hops_q_dict:
-        out_file.write("Name: " + hop +" "+ str(hops_aa_dict[hop]) + " AA\n")
-        out_file.write("Origin: " + hops_o_dict[hop] + "\n")
-        out_file.write("Quantity: " + str(round(hops_q_dict[hop], 2)) + "oz\n")
+    for key, value in sorted(hops_q_dict.items(), key=lambda item: (item[1], item[0])):
+        out_file.write("Name: " + key +" "+ str(hops_aa_dict[key]) + " AA\n")
+        out_file.write("Origin: " + hops_o_dict[key] + "\n")
+        out_file.write("Quantity: " + str(round(hops_q_dict[key], 2)) + "oz\n")
         out_file.write("\n")
 
     # Yeast
@@ -165,11 +164,11 @@ def BuildList():
             quantity = yeast_s_dict.get(yeast_name)
             new_quantity = float(quantity) + yeast_starter
             yeast_s_dict[yeast_name] = new_quantity
-    for yeasts in yeast_q_dict:
-        out_file.write("Name: " + yeasts + " " + yeast_i_dict[yeasts] + "\n")
-        out_file.write("Lab: " + yeast_l_dict[yeasts] + "\n")
-        out_file.write("Quantity: " + str(round(yeast_q_dict[yeasts],2)) + "\n")
-        out_file.write("Starter Size: " + str(round(yeast_s_dict[yeasts],2)) + "L\n")
+    for key, value in sorted(yeast_q_dict.items(), key=lambda item: (item[1], item[0])):
+        out_file.write("Name: " + key + " " + yeast_i_dict[key] + "\n")
+        out_file.write("Lab: " + yeast_l_dict[key] + "\n")
+        out_file.write("Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
+        out_file.write("Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
         out_file.write("\n")
 
     # Misc
