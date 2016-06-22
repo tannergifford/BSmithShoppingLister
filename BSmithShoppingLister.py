@@ -238,4 +238,5 @@ frame.pack(pady=5)
 # Create Build button
 Button(root, text="Build Shopping List", bg="#b3cccc", command=BuildList).pack(pady=(5, 0))
 
-root.mainloop()
+if __name__ == "__main__":
+    root.mainloop()
