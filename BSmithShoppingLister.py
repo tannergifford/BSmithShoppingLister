@@ -193,37 +193,41 @@ def BuildList():
     os.startfile(directory + active+"_recipe.txt")
 	
 # Set up main window
-root.geometry("350x400")
+root.geometry("400x455")
 root.resizable(0,0)
-root.configure(background='#595959')
+root.configure(background='#009999')
 root.iconbitmap('icon.ico')
-root.title("BSmith Shopping Lister")
+root.title("BeerSmith Shopping Lister")
 
-# Create recipe file location textbox
-textbox = Entry(root, bg="#d9d9d9", width=50)
+# Create frame for recipe location
+frame = Frame(root, bd=0, relief=RAISED, width=350, bg="#009999")
+frame.grid_rowconfigure(0, weight=1)
+frame.grid_columnconfigure(0, weight=1)
+frame.grid_columnconfigure(1, weight=2)
+button = Button(frame, text="Browse", bg="#b3cccc", command=openFile, width=8)
+textbox = Entry(frame, bg="#f0f5f5", width=50)
 if os.path.exists(recipeLoc):
     textbox.insert(END,recipeLoc)
 else:
     textbox.insert(END,"Browse for Beer Smith Recipes")
-textbox.pack(pady=5)
-
-# Create Browse button
-Button(root, text="Browse", bg="#808080", command=openFile).pack(pady=5)
+textbox.grid(row=0, column=0, sticky=N+S+E+W, padx=5)
+button.grid(row=0, column=1, sticky=N+S+E+W, padx=5)
+frame.pack(pady=(10,5))
 
 # Create List Recipes button
-Button(root, text="List Recipes", bg="#808080", command=RecipeList).pack(pady=5)
+Button(root, text="List Recipes", bg="#b3cccc", command=RecipeList, width=12).pack(pady=5)
 
 # Create frame for listbox
-frame = Frame(root, bd=2, relief=SUNKEN)
+frame = Frame(root, bd=2, relief=SUNKEN, bg="#009999")
 frame.grid_rowconfigure(0, weight=1)
 frame.grid_columnconfigure(0, weight=1)
 xscrollbar = Scrollbar(frame, orient=HORIZONTAL)
 xscrollbar.grid(row=1, column=0, sticky=E+W)
 yscrollbar = Scrollbar(frame)
 yscrollbar.grid(row=0, column=1, sticky=N+S)
-listbox = Listbox(frame, bd=0, width=50,
-    bg="#d9d9d9",
-    height=14,
+listbox = Listbox(frame, bd=0, width=60,
+    bg="#f0f5f5",
+    height=19,
     xscrollcommand=xscrollbar.set,
     yscrollcommand=yscrollbar.set)
 listbox.grid(row=0, column=0, sticky=N+S+E+W)
@@ -232,6 +236,6 @@ yscrollbar.config(command=listbox.yview)
 frame.pack(pady=5)
 
 # Create Build button
-Button(root, text="Build Shopping List", bg="#808080", command=BuildList).pack(pady=5)
+Button(root, text="Build Shopping List", bg="#b3cccc", command=BuildList).pack(pady=(5, 0))
 
 root.mainloop()
