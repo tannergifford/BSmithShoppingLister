@@ -1,2 +1,2 @@
 @echo off
-C:\Python32\pythonw.exe BSmithShoppingLister.py
+C:\Python34\python.exe BSmithShoppingLister.py

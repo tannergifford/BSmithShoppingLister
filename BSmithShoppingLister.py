@@ -196,7 +196,7 @@ def BuildList():
 root.geometry("400x455")
 root.resizable(0,0)
 root.configure(background='#009999')
-root.iconbitmap('icon.ico')
+root.iconbitmap('images\\icon.ico')
 root.title("BeerSmith Shopping Lister")
 
 # Create frame for recipe location
