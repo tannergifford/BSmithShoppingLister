@@ -139,7 +139,6 @@ def BuildList():
     yeast_q_dict = {}
     yeast_s_dict = {}
     yeast_i_dict = {}
-    out_file.write("Yeast: \n")
     for match in regex.finditer(text,re.S):
         yeast = regex.search(match.group(1))
         yeast = yeast.group(0)
@@ -164,29 +163,46 @@ def BuildList():
             quantity = yeast_s_dict.get(yeast_name)
             new_quantity = float(quantity) + yeast_starter
             yeast_s_dict[yeast_name] = new_quantity
-    for key, value in sorted(yeast_q_dict.items(), key=lambda item: (item[1], item[0])):
-        out_file.write("    Name: " + key + " " + yeast_i_dict[key] + "\n")
-        out_file.write("    Lab: " + yeast_l_dict[key] + "\n")
-        out_file.write("    Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
-        out_file.write("    Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
-        out_file.write("\n")
+    if yeast_q_dict:
+        out_file.write("Yeast: \n")
+        for key, value in sorted(yeast_q_dict.items(), key=lambda item: (item[1], item[0])):
+            out_file.write("    Name: " + key + " " + yeast_i_dict[key] + "\n")
+            out_file.write("    Lab: " + yeast_l_dict[key] + "\n")
+            out_file.write("    Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
+            out_file.write("    Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
+            out_file.write("\n")
 
     # Misc
     regex = re.compile("(<Misc>.*?</Misc>)", re.MULTILINE|re.DOTALL)
-    out_file.write("Miscellaneous: \n")
+    units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
+    misc_q_dict = {}
+    misc_use_dict = {}
+    misc_units_dict = {}
     for match in regex.finditer(text,re.S):
         misc = regex.search(match.group(1))
         misc = misc.group(0)
         misc_name = (re.search(r"<F_M_NAME>(.+)</F_M_NAME>", misc)).group(1)
         misc_use = (re.search(r"<F_M_USE_FOR>(.+)</F_M_USE_FOR>", misc)).group(1)
-        misc_quantity = (re.search(r"<F_M_AMOUNT>(.+)</F_M_AMOUNT>", misc)).group(1)
+        misc_quantity = float((re.search(r"<F_M_AMOUNT>(.+)</F_M_AMOUNT>", misc)).group(1))
         misc_units = (re.search(r"<F_M_UNITS>(.+)</F_M_UNITS>", misc)).group(1)
-        units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
-        unit = units_dict[misc_units]
-        out_file.write("    Name: " + misc_name + "\n")
-        out_file.write("    Use: " + misc_use + "\n")
-        out_file.write("    Quantity: " + misc_quantity[:-5] + " " + unit +"\n")
-        out_file.write("\n")
+        if misc_name not in misc_q_dict:
+            misc_q_dict[misc_name] = misc_quantity
+        elif yeast_name in yeast_q_dict:
+            quantity = misc_q_dict.get(misc_name)
+            new_quantity = float(quantity) + misc_quantity
+            misc_q_dict[misc_name] = new_quantity
+        if misc_name not in misc_units_dict:
+            unit = units_dict[misc_units]
+            misc_units_dict[misc_name] = unit
+        if misc_name not in misc_use_dict:
+            misc_use_dict[misc_name] = misc_use 
+    if misc_q_dict:
+        out_file.write("Miscellaneous: \n")
+        for key, value in sorted(misc_q_dict.items(), key=lambda item: (item[1], item[0])):
+            out_file.write("    Name: " + key + "\n")
+            out_file.write("    Use: " + misc_use_dict[key] + "\n")
+            out_file.write("    Quantity: " + str(round(misc_q_dict[key],2)) + " " + misc_units_dict[key] +"\n")
+            out_file.write("\n")
 
 	# Close up shop
     out_file.close()
