@@ -93,11 +93,11 @@ def BuildList():
         if grain_name not in grain_c_dict:
             grain_c_dict[grain_name] = grain_color
     for key, value in sorted(grain_q_dict.items(), key=lambda item: (item[1], item[0])):
-        out_file.write("Name: " + key + "\n")
-        out_file.write("Origin: " + grain_o_dict[key] + "\n")
-        out_file.write("Type: " + grain_t_dict[key] +"\n")
-        out_file.write("Color: " + str(grain_c_dict[key]) + " SRM\n")
-        out_file.write("Quantity: " + str(round(grain_q_dict[key],2)) + "oz\n")
+        out_file.write("    Name: " + key + "\n")
+        out_file.write("    Origin: " + grain_o_dict[key] + "\n")
+        out_file.write("    Type: " + grain_t_dict[key] +"\n")
+        out_file.write("    Color: " + str(grain_c_dict[key]) + " SRM\n")
+        out_file.write("    Quantity: " + str(round(grain_q_dict[key],2)) + "oz\n")
         out_file.write("\n")
 
     # Hops
@@ -128,9 +128,9 @@ def BuildList():
         if hops_name not in hops_o_dict:
             hops_o_dict[hops_name] = hops_origin
     for key, value in sorted(hops_q_dict.items(), key=lambda item: (item[1], item[0])):
-        out_file.write("Name: " + key +" "+ str(hops_aa_dict[key]) + " AA\n")
-        out_file.write("Origin: " + hops_o_dict[key] + "\n")
-        out_file.write("Quantity: " + str(round(hops_q_dict[key], 2)) + "oz\n")
+        out_file.write("    Name: " + key +" "+ str(hops_aa_dict[key]) + " AA\n")
+        out_file.write("    Origin: " + hops_o_dict[key] + "\n")
+        out_file.write("    Quantity: " + str(round(hops_q_dict[key], 2)) + "oz\n")
         out_file.write("\n")
 
     # Yeast
@@ -165,10 +165,10 @@ def BuildList():
             new_quantity = float(quantity) + yeast_starter
             yeast_s_dict[yeast_name] = new_quantity
     for key, value in sorted(yeast_q_dict.items(), key=lambda item: (item[1], item[0])):
-        out_file.write("Name: " + key + " " + yeast_i_dict[key] + "\n")
-        out_file.write("Lab: " + yeast_l_dict[key] + "\n")
-        out_file.write("Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
-        out_file.write("Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
+        out_file.write("    Name: " + key + " " + yeast_i_dict[key] + "\n")
+        out_file.write("    Lab: " + yeast_l_dict[key] + "\n")
+        out_file.write("    Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
+        out_file.write("    Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
         out_file.write("\n")
 
     # Misc
@@ -183,9 +183,9 @@ def BuildList():
         misc_units = (re.search(r"<F_M_UNITS>(.+)</F_M_UNITS>", misc)).group(1)
         units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
         unit = units_dict[misc_units]
-        out_file.write("Name: " + misc_name + "\n")
-        out_file.write("Use: " + misc_use + "\n")
-        out_file.write("Quantity: " + misc_quantity[:-5] + " " + unit +"\n")
+        out_file.write("    Name: " + misc_name + "\n")
+        out_file.write("    Use: " + misc_use + "\n")
+        out_file.write("    Quantity: " + misc_quantity[:-5] + " " + unit +"\n")
         out_file.write("\n")
 
 	# Close up shop
