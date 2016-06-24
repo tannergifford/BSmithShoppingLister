@@ -11,13 +11,13 @@ root = Tk()
 
 # Functions
 def openFile():
-    recipeLocation = filedialog.askopenfilename(filetypes=(("Beersmith Recipe Files", "*.bsmx"), ("All files", "*.*")))
+    recipeLocation = filedialog.askopenfilename(filetypes=(("BeerSmith Recipe Files", "Recipe*.bsmx"), ("All files", "*.*")))
     if recipeLocation:
         try:
             textbox.delete(0, END)
             textbox.insert(END, recipeLocation)
         except:
-            messagebox.showerror("Open Source File", "Failed to read file \n'%s'"%recipeLocation)
+            messagebox.showerror("BeerSmith Recipe Lister", "Failed to read file \n'%s'"%recipeLocation)
         return
 
 def RecipeList():
@@ -32,8 +32,11 @@ def RecipeList():
                 if match.group(1) not in recipeList:
                     recipeList.append(match.group(1))
     listbox.delete(0, END)
-    for r in sorted(recipeList):
-        listbox.insert(END, r)
+    if recipeList != []:
+        for r in sorted(recipeList):
+            listbox.insert(END, r)
+    else:
+        listbox.insert(END, "No recipes found in file")
 
 def BuildList():
     active = listbox.get(ACTIVE)
@@ -50,10 +53,10 @@ def BuildList():
     out_file.write("\n")
     match = regex.search(text)
     if match:
-        messagebox.showinfo("Recipe Found", active + " recipe found")
+        messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n Output location: " + directory + active + "_recipe.txt")
         text = match.group(0)
     else:
-        messagebox.showerror("Selected", "No match or Selection")
+        messagebox.showerror("BeerSmith Recipe Lister", "No match or Selection")
         return
 
     # Grain
