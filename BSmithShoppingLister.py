@@ -53,7 +53,7 @@ def BuildList():
     out_file.write("\n")
     match = regex.search(text)
     if match:
-        messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n Output location: " + directory + active + "_recipe.txt")
+        messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n" + "Output location: " + directory + active + "_recipe.txt")
         text = match.group(0)
     else:
         messagebox.showerror("BeerSmith Recipe Lister", "No match or Selection")
