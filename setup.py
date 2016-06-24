@@ -8,6 +8,12 @@ setup(
     version = "0.1",
     description = "Creates a shopping list for a given BeerSmith recipe",
     author = "Tanner Gifford",
-    windows=['BSmithShoppingLister.py'],
-    data_files = Mydata_files
+    windows=[{
+        'script':'BSmithShoppingLister.py',
+        'icon_resources': [(1, 'Images\\icon.ico')],
+        'dest_base':'BSmithShoppingLister'
+        }],
+    data_files = Mydata_files,
+    zipfile = None,
+    options = {'py2exe': {'bundle_files': 2}}
 )
