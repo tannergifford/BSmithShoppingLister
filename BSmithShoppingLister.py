@@ -24,7 +24,6 @@ def RecipeList():
     recipeLocation = textbox.get()
     recipeList = []
     regex = "<F_R_NAME>(.+?)</F_R_NAME>"
-
     with open(recipeLocation, 'r') as file:
         lines = file.readlines()
         for line in lines:
@@ -40,17 +39,15 @@ def BuildList():
     active = listbox.get(ACTIVE)
     recipeLocation = textbox.get()
     regex = re.compile("(<Recipe><_MOD_>\d{4}-\d{2}-\d{2}</_MOD_>.<F_R_NAME>"+active+"</F_R_NAME>.*?</Recipe>)", re.MULTILINE|re.DOTALL)
-
     bs_file = open(recipeLocation, 'r')
     text = bs_file.read()
     bs_file.close()
-
     directory = "C:/Users/" + os.getlogin() + "/Desktop/Recipes/"
     if not os.path.exists(directory):
         os.makedirs(directory)
     out_file = open(directory + active+"_recipe.txt","w")
     out_file.write(active + " ingredients\n")
-
+    out_file.write("\n")
     match = regex.search(text)
     if match:
         messagebox.showinfo("Recipe Found", active + " recipe found")
@@ -66,7 +63,7 @@ def BuildList():
     grain_o_dict = {}
     grain_q_dict = {}
     grain_type_dict = {'0':'Grain', '1':'LME', '2':'Sugar', '3':'Adjunct', '4':'DME'}
-    out_file.write("\nGrain: \n")
+    out_file.write("Grain: \n")
     for match in regex.finditer(text,re.S):
         grain = regex.search(match.group(1))
         grain = grain.group(0)
