@@ -11,7 +11,7 @@ setup(
     windows=[{
         'script':'BSmithShoppingLister.py',
         'icon_resources': [(1, 'Images\\icon.ico')],
-        'dest_base':'BSmithShoppingLister'
+        'dest_base':'BeerSmith Shopping Lister'
         }],
     data_files = Mydata_files,
     zipfile = None,
