@@ -45,169 +45,173 @@ def BuildList():
     bs_file = open(recipeLocation, 'r')
     text = bs_file.read()
     bs_file.close()
-    directory = "C:/Users/" + os.getlogin() + "/Desktop/Recipes/"
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-    out_file = open(directory + active+"_recipe.txt","w")
-    out_file.write(active + " ingredients\n")
-    out_file.write("\n")
     match = regex.search(text)
-    if match:
-        messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n" + "Output location: " + directory + active + "_recipe.txt")
-        text = match.group(0)
-    else:
+    if not match:
         messagebox.showerror("BeerSmith Recipe Lister", "No match or Selection")
         return
-
-    # Grain
-    regex = re.compile("(<Grain>.*?</Grain>)", re.MULTILINE|re.DOTALL)
-    grain_t_dict = {}
-    grain_c_dict = {}
-    grain_o_dict = {}
-    grain_q_dict = {}
-    grain_type_dict = {'0':'Grain', '1':'LME', '2':'Sugar', '3':'Adjunct', '4':'DME'}
-    out_file.write("Grain: \n")
-    for match in regex.finditer(text,re.S):
-        grain = regex.search(match.group(1))
-        grain = grain.group(0)
-        grain_type = (re.search(r"<F_G_TYPE>(.+)</F_G_TYPE>", grain)).group(1)
-        grain_type = grain_type_dict[grain_type]
-        grain_name = (re.search(r"<F_G_NAME>(.+)</F_G_NAME>", grain)).group(1)
-        grain_origin = re.search(r"<F_G_ORIGIN>(.+)</F_G_ORIGIN>", grain)
-        if grain_origin:
-            grain_origin = grain_origin.group(1)
-        else:
-            grain_origin = "Unknown"
-        grain_color = float((re.search(r"<F_G_COLOR>(.+)</F_G_COLOR>", grain)).group(1))
-        grain_quantity = float((re.search(r"<F_G_AMOUNT>(.+)</F_G_AMOUNT>", grain)).group(1))
-        if grain_name not in grain_t_dict:
-            grain_t_dict[grain_name] = grain_type
-        if grain_name not in grain_q_dict:
-            grain_q_dict[grain_name] = grain_quantity
-        elif grain_name in grain_q_dict:
-            quantity = grain_q_dict.get(grain_name)
-            new_quantity = float(quantity) + grain_quantity
-            grain_q_dict[grain_name] = new_quantity
-        if grain_name not in grain_o_dict:
-            grain_o_dict[grain_name] = grain_origin
-        if grain_name not in grain_c_dict:
-            grain_c_dict[grain_name] = grain_color
-    for key, value in sorted(grain_q_dict.items(), key=lambda item: (item[1], item[0])):
-        out_file.write("    Name: " + key + "\n")
-        out_file.write("    Origin: " + grain_o_dict[key] + "\n")
-        out_file.write("    Type: " + grain_t_dict[key] +"\n")
-        out_file.write("    Color: " + str(grain_c_dict[key]) + " SRM\n")
-        out_file.write("    Quantity: " + str(round(grain_q_dict[key],2)) + "oz\n")
-        out_file.write("\n")
-
-    # Hops
-    regex = re.compile("(<Hops>.*?</Hops>)", re.MULTILINE|re.DOTALL)
-    hops_aa_dict = {}
-    hops_q_dict = {}
-    hops_o_dict = {}
-    out_file.write("Hops:\n")
-    for match in regex.finditer(text,re.S):
-        hops = regex.search(match.group(1))
-        hops = hops.group(0)
-        hops_name = (re.search(r"<F_H_NAME>(.+)</F_H_NAME>", hops)).group(1)
-        hops_origin = re.search(r"<F_H_ORIGIN>(.+)</F_H_ORIGIN>", hops)
-        if hops_origin:
-            hops_origin = hops_origin.group(1)
-        else:
-            hops_origin = "Unknown"
-        hops_alpha = float((re.search(r"<F_H_ALPHA>(.+)</F_H_ALPHA>", hops)).group(1))
-        hops_quantity = float((re.search(r"<F_H_AMOUNT>(.+)</F_H_AMOUNT>", hops)).group(1))
-        if hops_name not in hops_aa_dict:
-            hops_aa_dict[hops_name] = hops_alpha
-        if hops_name not in hops_q_dict:
-            hops_q_dict[hops_name] = hops_quantity
-        elif hops_name in hops_q_dict:
-            quantity = hops_q_dict.get(hops_name)
-            new_quantity = float(quantity) + hops_quantity
-            hops_q_dict[hops_name] = new_quantity
-        if hops_name not in hops_o_dict:
-            hops_o_dict[hops_name] = hops_origin
-    for key, value in sorted(hops_q_dict.items(), key=lambda item: (item[1], item[0])):
-        out_file.write("    Name: " + key +" "+ str(hops_aa_dict[key]) + " AA\n")
-        out_file.write("    Origin: " + hops_o_dict[key] + "\n")
-        out_file.write("    Quantity: " + str(round(hops_q_dict[key], 2)) + "oz\n")
-        out_file.write("\n")
-
-    # Yeast
-    regex = re.compile("(<Yeast>.*?</Yeast>)", re.MULTILINE|re.DOTALL)
-    yeast_l_dict = {}
-    yeast_q_dict = {}
-    yeast_s_dict = {}
-    yeast_i_dict = {}
-    for match in regex.finditer(text,re.S):
-        yeast = regex.search(match.group(1))
-        yeast = yeast.group(0)
-        yeast_name = (re.search(r"<F_Y_NAME>(.+)</F_Y_NAME>", yeast)).group(1)
-        yeast_id = (re.search(r"<F_Y_PRODUCT_ID>(.+)</F_Y_PRODUCT_ID>", yeast)).group(1)
-        yeast_lab = (re.search(r"<F_Y_LAB>(.+)</F_Y_LAB>", yeast)).group(1)
-        yeast_quantity = float((re.search(r"<F_Y_AMOUNT>(.+)</F_Y_AMOUNT>", yeast)).group(1))
-        yeast_starter = float((re.search(r"<F_Y_STARTER_SIZE>(.+)</F_Y_STARTER_SIZE>", yeast)).group(1))
-        if yeast_name not in yeast_i_dict:
-            yeast_i_dict[yeast_name] = yeast_id
-        if yeast_name not in yeast_l_dict:
-            yeast_l_dict[yeast_name] = yeast_lab
-        if yeast_name not in yeast_q_dict:
-            yeast_q_dict[yeast_name] = yeast_quantity
-        elif yeast_name in yeast_q_dict:
-            quantity = yeast_q_dict.get(yeast_name)
-            new_quantity = float(quantity) + yeast_quantity
-            yeast_q_dict[yeast_name] = new_quantity
-        if yeast_name not in yeast_s_dict:
-            yeast_s_dict[yeast_name] = yeast_starter
-        elif yeast_name in yeast_s_dict:
-            quantity = yeast_s_dict.get(yeast_name)
-            new_quantity = float(quantity) + yeast_starter
-            yeast_s_dict[yeast_name] = new_quantity
-    if yeast_q_dict:
-        out_file.write("Yeast: \n")
-        for key, value in sorted(yeast_q_dict.items(), key=lambda item: (item[1], item[0])):
-            out_file.write("    Name: " + key + " " + yeast_i_dict[key] + "\n")
-            out_file.write("    Lab: " + yeast_l_dict[key] + "\n")
-            out_file.write("    Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
-            out_file.write("    Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
+    else:
+        try:
+            directory = "C:/Users/" + os.getlogin() + "/Desktop/Recipes/"
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            out_file = open(directory + active+"_recipe.txt","w")
+            out_file.write(active + " ingredients\n")
             out_file.write("\n")
+            text = match.group(0)
+            
+            # Grain
+            regex = re.compile("(<Grain>.*?</Grain>)", re.MULTILINE|re.DOTALL)
+            grain_t_dict = {}
+            grain_c_dict = {}
+            grain_o_dict = {}
+            grain_q_dict = {}
+            grain_type_dict = {'0':'Grain', '1':'LME', '2':'Sugar', '3':'Adjunct', '4':'DME'}
+            out_file.write("Grain: \n")
+            for match in regex.finditer(text,re.S):
+                grain = regex.search(match.group(1))
+                grain = grain.group(0)
+                grain_type = (re.search(r"<F_G_TYPE>(.+)</F_G_TYPE>", grain)).group(1)
+                grain_type = grain_type_dict[grain_type]
+                grain_name = (re.search(r"<F_G_NAME>(.+)</F_G_NAME>", grain)).group(1)
+                grain_origin = re.search(r"<F_G_ORIGIN>(.+)</F_G_ORIGIN>", grain)
+                if grain_origin:
+                    grain_origin = grain_origin.group(1)
+                else:
+                    grain_origin = "Unknown"
+                grain_color = float((re.search(r"<F_G_COLOR>(.+)</F_G_COLOR>", grain)).group(1))
+                grain_quantity = float((re.search(r"<F_G_AMOUNT>(.+)</F_G_AMOUNT>", grain)).group(1))
+                if grain_name not in grain_t_dict:
+                    grain_t_dict[grain_name] = grain_type
+                if grain_name not in grain_q_dict:
+                    grain_q_dict[grain_name] = grain_quantity
+                elif grain_name in grain_q_dict:
+                    quantity = grain_q_dict.get(grain_name)
+                    new_quantity = float(quantity) + grain_quantity
+                    grain_q_dict[grain_name] = new_quantity
+                if grain_name not in grain_o_dict:
+                    grain_o_dict[grain_name] = grain_origin
+                if grain_name not in grain_c_dict:
+                    grain_c_dict[grain_name] = grain_color
+            for key, value in sorted(grain_q_dict.items(), key=lambda item: (item[1], item[0])):
+                out_file.write("    Name: " + key + "\n")
+                out_file.write("    Origin: " + grain_o_dict[key] + "\n")
+                out_file.write("    Type: " + grain_t_dict[key] +"\n")
+                out_file.write("    Color: " + str(grain_c_dict[key]) + " SRM\n")
+                out_file.write("    Quantity: " + str(round(grain_q_dict[key],2)) + "oz\n")
+                out_file.write("\n")
 
-    # Misc
-    regex = re.compile("(<Misc>.*?</Misc>)", re.MULTILINE|re.DOTALL)
-    units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
-    misc_q_dict = {}
-    misc_use_dict = {}
-    misc_units_dict = {}
-    for match in regex.finditer(text,re.S):
-        misc = regex.search(match.group(1))
-        misc = misc.group(0)
-        misc_name = (re.search(r"<F_M_NAME>(.+)</F_M_NAME>", misc)).group(1)
-        misc_use = (re.search(r"<F_M_USE_FOR>(.+)</F_M_USE_FOR>", misc)).group(1)
-        misc_quantity = float((re.search(r"<F_M_AMOUNT>(.+)</F_M_AMOUNT>", misc)).group(1))
-        misc_units = (re.search(r"<F_M_UNITS>(.+)</F_M_UNITS>", misc)).group(1)
-        if misc_name not in misc_q_dict:
-            misc_q_dict[misc_name] = misc_quantity
-        elif yeast_name in yeast_q_dict:
-            quantity = misc_q_dict.get(misc_name)
-            new_quantity = float(quantity) + misc_quantity
-            misc_q_dict[misc_name] = new_quantity
-        if misc_name not in misc_units_dict:
-            unit = units_dict[misc_units]
-            misc_units_dict[misc_name] = unit
-        if misc_name not in misc_use_dict:
-            misc_use_dict[misc_name] = misc_use 
-    if misc_q_dict:
-        out_file.write("Miscellaneous: \n")
-        for key, value in sorted(misc_q_dict.items(), key=lambda item: (item[1], item[0])):
-            out_file.write("    Name: " + key + "\n")
-            out_file.write("    Use: " + misc_use_dict[key] + "\n")
-            out_file.write("    Quantity: " + str(round(misc_q_dict[key],2)) + " " + misc_units_dict[key] +"\n")
-            out_file.write("\n")
+            # Hops
+            regex = re.compile("(<Hops>.*?</Hops>)", re.MULTILINE|re.DOTALL)
+            hops_aa_dict = {}
+            hops_q_dict = {}
+            hops_o_dict = {}
+            out_file.write("Hops:\n")
+            for match in regex.finditer(text,re.S):
+                hops = regex.search(match.group(1))
+                hops = hops.group(0)
+                hops_name = (re.search(r"<F_H_NAME>(.+)</F_H_NAME>", hops)).group(1)
+                hops_origin = re.search(r"<F_H_ORIGIN>(.+)</F_H_ORIGIN>", hops)
+                if hops_origin:
+                    hops_origin = hops_origin.group(1)
+                else:
+                    hops_origin = "Unknown"
+                hops_alpha = float((re.search(r"<F_H_ALPHA>(.+)</F_H_ALPHA>", hops)).group(1))
+                hops_quantity = float((re.search(r"<F_H_AMOUNT>(.+)</F_H_AMOUNT>", hops)).group(1))
+                if hops_name not in hops_aa_dict:
+                    hops_aa_dict[hops_name] = hops_alpha
+                if hops_name not in hops_q_dict:
+                    hops_q_dict[hops_name] = hops_quantity
+                elif hops_name in hops_q_dict:
+                    quantity = hops_q_dict.get(hops_name)
+                    new_quantity = float(quantity) + hops_quantity
+                    hops_q_dict[hops_name] = new_quantity
+                if hops_name not in hops_o_dict:
+                    hops_o_dict[hops_name] = hops_origin
+            for key, value in sorted(hops_q_dict.items(), key=lambda item: (item[1], item[0])):
+                out_file.write("    Name: " + key +" "+ str(hops_aa_dict[key]) + " AA\n")
+                out_file.write("    Origin: " + hops_o_dict[key] + "\n")
+                out_file.write("    Quantity: " + str(round(hops_q_dict[key], 2)) + "oz\n")
+                out_file.write("\n")
 
-	# Close up shop
-    out_file.close()
-    os.startfile(directory + active+"_recipe.txt")
-	
+            # Yeast
+            regex = re.compile("(<Yeast>.*?</Yeast>)", re.MULTILINE|re.DOTALL)
+            yeast_l_dict = {}
+            yeast_q_dict = {}
+            yeast_s_dict = {}
+            yeast_i_dict = {}
+            for match in regex.finditer(text,re.S):
+                yeast = regex.search(match.group(1))
+                yeast = yeast.group(0)
+                yeast_name = (re.search(r"<F_Y_NAME>(.+)</F_Y_NAME>", yeast)).group(1)
+                yeast_id = (re.search(r"<F_Y_PRODUCT_ID>(.+)</F_Y_PRODUCT_ID>", yeast)).group(1)
+                yeast_lab = (re.search(r"<F_Y_LAB>(.+)</F_Y_LAB>", yeast)).group(1)
+                yeast_quantity = float((re.search(r"<F_Y_AMOUNT>(.+)</F_Y_AMOUNT>", yeast)).group(1))
+                yeast_starter = float((re.search(r"<F_Y_STARTER_SIZE>(.+)</F_Y_STARTER_SIZE>", yeast)).group(1))
+                if yeast_name not in yeast_i_dict:
+                    yeast_i_dict[yeast_name] = yeast_id
+                if yeast_name not in yeast_l_dict:
+                    yeast_l_dict[yeast_name] = yeast_lab
+                if yeast_name not in yeast_q_dict:
+                    yeast_q_dict[yeast_name] = yeast_quantity
+                elif yeast_name in yeast_q_dict:
+                    quantity = yeast_q_dict.get(yeast_name)
+                    new_quantity = float(quantity) + yeast_quantity
+                    yeast_q_dict[yeast_name] = new_quantity
+                if yeast_name not in yeast_s_dict:
+                    yeast_s_dict[yeast_name] = yeast_starter
+                elif yeast_name in yeast_s_dict:
+                    quantity = yeast_s_dict.get(yeast_name)
+                    new_quantity = float(quantity) + yeast_starter
+                    yeast_s_dict[yeast_name] = new_quantity
+            if yeast_q_dict:
+                out_file.write("Yeast: \n")
+                for key, value in sorted(yeast_q_dict.items(), key=lambda item: (item[1], item[0])):
+                    out_file.write("    Name: " + key + " " + yeast_i_dict[key] + "\n")
+                    out_file.write("    Lab: " + yeast_l_dict[key] + "\n")
+                    out_file.write("    Quantity: " + str(round(yeast_q_dict[key],2)) + "\n")
+                    out_file.write("    Starter Size: " + str(round(yeast_s_dict[key],2)) + "L\n")
+                    out_file.write("\n")
+
+            # Misc
+            regex = re.compile("(<Misc>.*?</Misc>)", re.MULTILINE|re.DOTALL)
+            units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
+            misc_q_dict = {}
+            misc_use_dict = {}
+            misc_units_dict = {}
+            for match in regex.finditer(text,re.S):
+                misc = regex.search(match.group(1))
+                misc = misc.group(0)
+                misc_name = (re.search(r"<F_M_NAME>(.+)</F_M_NAME>", misc)).group(1)
+                misc_use = (re.search(r"<F_M_USE_FOR>(.+)</F_M_USE_FOR>", misc)).group(1)
+                misc_quantity = float((re.search(r"<F_M_AMOUNT>(.+)</F_M_AMOUNT>", misc)).group(1))
+                misc_units = (re.search(r"<F_M_UNITS>(.+)</F_M_UNITS>", misc)).group(1)
+                if misc_name not in misc_q_dict:
+                    misc_q_dict[misc_name] = misc_quantity
+                elif yeast_name in yeast_q_dict:
+                    quantity = misc_q_dict.get(misc_name)
+                    new_quantity = float(quantity) + misc_quantity
+                    misc_q_dict[misc_name] = new_quantity
+                if misc_name not in misc_units_dict:
+                    unit = units_dict[misc_units]
+                    misc_units_dict[misc_name] = unit
+                if misc_name not in misc_use_dict:
+                    misc_use_dict[misc_name] = misc_use 
+            if misc_q_dict:
+                out_file.write("Miscellaneous: \n")
+                for key, value in sorted(misc_q_dict.items(), key=lambda item: (item[1], item[0])):
+                    out_file.write("    Name: " + key + "\n")
+                    out_file.write("    Use: " + misc_use_dict[key] + "\n")
+                    out_file.write("    Quantity: " + str(round(misc_q_dict[key],2)) + " " + misc_units_dict[key] +"\n")
+                    out_file.write("\n")
+
+            # Close up shop
+            out_file.close()
+            messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n" + "Output location: " + directory + active + "_recipe.txt")
+            os.startfile(directory + active+"_recipe.txt")
+        except:
+            messagebox.showerror("BeerSmith Recipe Lister", "Error\n\n" + str(sys.exc_info()[1]))
+        return
+        
 # Set up main window
 root.geometry("400x455")
 root.resizable(0,0)
