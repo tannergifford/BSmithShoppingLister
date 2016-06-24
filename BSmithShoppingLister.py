@@ -212,6 +212,15 @@ def BuildList():
             messagebox.showerror("BeerSmith Recipe Lister", "Error\n\n" + str(sys.exc_info()[1]))
         return
         
+def states(*args):
+    y = stringvar1.get()
+    if os.path.exists(y):
+        button1.config(state='normal')
+        #print("enable")
+    else:
+        button1.config(state='disabled')
+        #print("disable")
+        
 # Set up main window
 root.geometry("400x455")
 root.resizable(0,0)
@@ -219,23 +228,28 @@ root.configure(background='#009999')
 root.iconbitmap('images\\icon.ico')
 root.title("BeerSmith Shopping Lister")
 
+stringvar1 = StringVar(root)
+stringvar1.trace("w", states)
+
 # Create frame for recipe location
 frame = Frame(root, bd=0, relief=RAISED, width=350, bg="#009999")
 frame.grid_rowconfigure(0, weight=1)
 frame.grid_columnconfigure(0, weight=1)
 frame.grid_columnconfigure(1, weight=2)
+textbox = Entry(frame, bg="#f0f5f5", width=50, textvariable=stringvar1)
 button = Button(frame, text="Browse", bg="#b3cccc", command=openFile, width=8)
-textbox = Entry(frame, bg="#f0f5f5", width=50)
-if os.path.exists(recipeLoc):
-    textbox.insert(END,recipeLoc)
-else:
-    textbox.insert(END,"Browse for Beer Smith Recipes")
 textbox.grid(row=0, column=0, sticky=N+S+E+W, padx=5)
 button.grid(row=0, column=1, sticky=N+S+E+W, padx=5)
 frame.pack(pady=(10,5))
 
 # Create List Recipes button
-Button(root, text="List Recipes", bg="#b3cccc", command=RecipeList, width=12).pack(pady=5)
+button1 = Button(root, text="List Recipes", state="disabled", bg="#b3cccc", command=RecipeList, width=12)
+button1.pack(pady=5)
+
+if os.path.exists(recipeLoc):
+    textbox.insert(END,recipeLoc)
+else:
+    textbox.insert(END,"Browse for Beer Smith Recipes")
 
 # Create frame for listbox
 frame = Frame(root, bd=2, relief=SUNKEN, bg="#009999")
