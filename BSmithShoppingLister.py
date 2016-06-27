@@ -223,7 +223,7 @@ def button1states(*args):
 
 def button2states(*args):
     y = listvar.get()
-    if y:
+    if y and y != "('No recipes found in file',)":
         button2.config(state='normal')
         #print("enable2")
     else:
