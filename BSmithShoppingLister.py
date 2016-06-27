@@ -212,14 +212,23 @@ def BuildList():
             messagebox.showerror("BeerSmith Recipe Lister", "Error\n\n" + str(sys.exc_info()[1]))
         return
         
-def states(*args):
-    y = stringvar1.get()
+def button1states(*args):
+    y = stringvar.get()
     if os.path.exists(y):
         button1.config(state='normal')
-        #print("enable")
+        #print("enable1")
     else:
         button1.config(state='disabled')
-        #print("disable")
+        #print("disable1")
+
+def button2states(*args):
+    y = listvar.get()
+    if y:
+        button2.config(state='normal')
+        #print("enable2")
+    else:
+        button2.config(state='disabled')
+        #print("disable2")
         
 # Set up main window
 root.geometry("400x455")
@@ -228,15 +237,18 @@ root.configure(background='#009999')
 root.iconbitmap('images\\icon.ico')
 root.title("BeerSmith Shopping Lister")
 
-stringvar1 = StringVar(root)
-stringvar1.trace("w", states)
+stringvar = StringVar(root)
+stringvar.trace("w", button1states)
+
+listvar = StringVar(root)
+listvar.trace("w", button2states)
 
 # Create frame for recipe location
 frame = Frame(root, bd=0, relief=RAISED, width=350, bg="#009999")
 frame.grid_rowconfigure(0, weight=1)
 frame.grid_columnconfigure(0, weight=1)
 frame.grid_columnconfigure(1, weight=2)
-textbox = Entry(frame, bg="#f0f5f5", width=50, textvariable=stringvar1)
+textbox = Entry(frame, bg="#f0f5f5", width=50, textvariable=stringvar)
 button = Button(frame, text="Browse", bg="#b3cccc", command=openFile, width=8)
 textbox.grid(row=0, column=0, sticky=N+S+E+W, padx=5)
 button.grid(row=0, column=1, sticky=N+S+E+W, padx=5)
@@ -262,6 +274,7 @@ yscrollbar.grid(row=0, column=1, sticky=N+S)
 listbox = Listbox(frame, bd=0, width=60,
     bg="#f0f5f5",
     height=19,
+    listvariable=listvar,
     xscrollcommand=xscrollbar.set,
     yscrollcommand=yscrollbar.set)
 listbox.grid(row=0, column=0, sticky=N+S+E+W)
@@ -270,7 +283,8 @@ yscrollbar.config(command=listbox.yview)
 frame.pack(pady=5)
 
 # Create Build button
-Button(root, text="Build Shopping List", bg="#b3cccc", command=BuildList).pack(pady=(5, 0))
+button2 = Button(root, text="Build Shopping List", state="disabled", bg="#b3cccc", command=BuildList)
+button2.pack(pady=(5,0))
 
 if __name__ == "__main__":
     root.mainloop()
