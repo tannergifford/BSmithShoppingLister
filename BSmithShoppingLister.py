@@ -5,10 +5,6 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 
-# Variables
-recipeLoc = "C:/Users/" + os.getlogin() + "/Documents/BeerSmith2/Recipe.bsmx"
-root = Tk()
-
 # Functions
 def openFile():
     recipeLocation = filedialog.askopenfilename(filetypes=(("BeerSmith Recipe Files", "Recipe*.bsmx"), ("All files", "*.*")))
@@ -51,7 +47,7 @@ def BuildList():
         return
     else:
         try:
-            directory = "C:/Users/" + os.getlogin() + "/Desktop/Recipes/"
+            directory = os.path.expanduser("~") + "\\Desktop\\Recipes\\"
             if not os.path.exists(directory):
                 os.makedirs(directory)
             out_file = open(directory + active+"_recipe.txt","w")
@@ -231,6 +227,7 @@ def button2states(*args):
         #print("disable2")
         
 # Set up main window
+root = Tk()
 root.geometry("400x455")
 root.resizable(0,0)
 root.configure(background='#009999')
@@ -258,6 +255,7 @@ frame.pack(pady=(10,5))
 button1 = Button(root, text="List Recipes", state="disabled", bg="#b3cccc", command=RecipeList, width=12)
 button1.pack(pady=5)
 
+recipeLoc = os.path.expanduser("~") + "\\Documents\\BeerSmith2\\Recipe.bsmx"
 if os.path.exists(recipeLoc):
     textbox.insert(END,recipeLoc)
 else:
