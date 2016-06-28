@@ -210,7 +210,7 @@ def BuildList():
         
 def button1states(*args):
     y = stringvar.get()
-    if os.path.exists(y):
+    if os.path.isfile(y):
         button1.config(state='normal')
         #print("enable1")
     else:
