@@ -3,7 +3,7 @@ import zipfile
 import shutil
 import time
 
-files = ('BeersmithShoppingLister.zip', 'dist/', '__pycache__')
+files = ('deliverables\\BeersmithShoppingLister.zip', 'dist\\', '__pycache__')
 
 def zip(src, dst):
     zf = zipfile.ZipFile("%s.zip" % (dst), "w", zipfile.ZIP_DEFLATED)
@@ -38,7 +38,7 @@ try:
 
     print('Zipping files')
     # Create the archive
-    zip("dist", "BeerSmithShoppingLister")
+    zip("dist", "deliverables\\BeerSmithShoppingLister")
     
     print('Done')
     
