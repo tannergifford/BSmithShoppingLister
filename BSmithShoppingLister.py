@@ -47,6 +47,7 @@ def BuildList():
         return
     else:
         try:
+            step = "main"
             directory = os.path.expanduser("~") + "\\Desktop\\Recipes\\"
             if not os.path.exists(directory):
                 os.makedirs(directory)
@@ -56,6 +57,7 @@ def BuildList():
             text = match.group(0)
             
             # Grain
+            step = "grain"
             regex = re.compile("(<Grain>.*?</Grain>)", re.MULTILINE|re.DOTALL)
             grain_t_dict = {}
             grain_c_dict = {}
@@ -97,6 +99,7 @@ def BuildList():
                 out_file.write("\n")
 
             # Hops
+            step = "hops"
             regex = re.compile("(<Hops>.*?</Hops>)", re.MULTILINE|re.DOTALL)
             hops_aa_dict = {}
             hops_q_dict = {}
@@ -130,6 +133,7 @@ def BuildList():
                 out_file.write("\n")
 
             # Yeast
+            step = "yeast"
             regex = re.compile("(<Yeast>.*?</Yeast>)", re.MULTILINE|re.DOTALL)
             yeast_l_dict = {}
             yeast_q_dict = {}
@@ -169,6 +173,7 @@ def BuildList():
                     out_file.write("\n")
 
             # Misc
+            step = "misc"
             regex = re.compile("(<Misc>.*?</Misc>)", re.MULTILINE|re.DOTALL)
             units_dict = {'0':'mg', '1':'g', '2':'oz', '3':'lb', '4':'kg', '5':'ml', '6':'tsp', '7':'tbsp', '8':'Cup', '9':'pt', '10':'qt', '11':'l', '12':'gal', '13':'Items',}
             misc_q_dict = {}
@@ -201,11 +206,12 @@ def BuildList():
                     out_file.write("\n")
 
             # Close up shop
+            step = "cleanup"
             out_file.close()
             messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n" + "Output location: " + directory + active + "_recipe.txt")
             os.startfile(directory + active+"_recipe.txt")
         except:
-            messagebox.showerror("BeerSmith Recipe Lister", "Error\n\n" + str(sys.exc_info()[1]))
+            messagebox.showerror("BeerSmith Recipe Lister", "Error in " + step + ".\n\n" + str(sys.exc_info()[1]))
         return
         
 def button1states(*args):
