@@ -225,6 +225,7 @@ def button1states(*args):
         #print("enable1")
     else:
         button1.config(state='disabled')
+        button2.config(state='disabled')
         #print("disable1")
 
 def button2states(*args):
@@ -235,6 +236,7 @@ def button2states(*args):
     else:
         button2.config(state='disabled')
         #print("disable2")
+        
         
 # Set up main window
 root = Tk()
@@ -249,6 +251,9 @@ stringvar.trace("w", button1states)
 
 listvar = StringVar(root)
 listvar.trace("w", button2states)
+
+b1var = StringVar(root)
+b1var.trace("w", button2states)
 
 # Create frame for recipe location
 frame = Frame(root, bd=0, relief=RAISED, width=350, bg="#009999")
