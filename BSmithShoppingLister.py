@@ -237,7 +237,6 @@ def button2states(*args):
         button2.config(state='disabled')
         #print("disable2")
         
-        
 # Set up main window
 root = Tk()
 root.geometry("400x455")
