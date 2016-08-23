@@ -183,7 +183,11 @@ def BuildList():
                 misc = regex.search(match.group(1))
                 misc = misc.group(0)
                 misc_name = (re.search(r"<F_M_NAME>(.+)</F_M_NAME>", misc)).group(1)
-                misc_use = (re.search(r"<F_M_USE_FOR>(.+)</F_M_USE_FOR>", misc)).group(1)
+                misc_use = (re.search(r"<F_M_USE_FOR>(.+)</F_M_USE_FOR>", misc))
+                if misc_use:
+                    misc_use = misc_use.group(1)
+                else:
+                    misc_use = "Unknown"
                 misc_quantity = float((re.search(r"<F_M_AMOUNT>(.+)</F_M_AMOUNT>", misc)).group(1))
                 misc_units = (re.search(r"<F_M_UNITS>(.+)</F_M_UNITS>", misc)).group(1)
                 if misc_name not in misc_q_dict:
