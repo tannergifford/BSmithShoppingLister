@@ -225,7 +225,6 @@ def button1states(*args):
         #print("enable1")
     else:
         button1.config(state='disabled')
-        button2.config(state='disabled')
         #print("disable1")
 
 def button2states(*args):
