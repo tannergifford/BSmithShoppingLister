@@ -268,9 +268,13 @@ frame.pack(pady=(10,5))
 button1 = Button(root, text="List Recipes", state="disabled", bg="#b3cccc", command=RecipeList, width=12)
 button1.pack(pady=5)
 
-recipeLoc = os.path.expanduser("~") + "\\Documents\\BeerSmith2\\Recipe.bsmx"
-if os.path.exists(recipeLoc):
-    textbox.insert(END,recipeLoc)
+# Check 2 most common locations for recipes
+recipeLoc1 = os.path.expanduser("~") + "\\Dropbox\\BeerSmith2\\Recipe.bsmx"
+recipeLoc2 = os.path.expanduser("~") + "\\Documents\\BeerSmith2\\Recipe.bsmx"
+if os.path.exists(recipeLoc1):
+    textbox.insert(END,recipeLoc1)
+elif os.path.exists(recipeLoc2):
+    textbox.insert(END,recipeLoc2)
 else:
     textbox.insert(END,"Browse for Beer Smith Recipes")
 
