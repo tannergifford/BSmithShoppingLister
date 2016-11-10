@@ -1,3 +1,6 @@
+# Requires python 3.4
+# Install py2exe: pip install py2exe
+
 import os
 import zipfile
 import shutil
