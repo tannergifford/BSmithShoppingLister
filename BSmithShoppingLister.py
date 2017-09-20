@@ -36,14 +36,15 @@ def RecipeList():
 
 def BuildList():
     active = listbox.get(ACTIVE)
+    reActive = re.escape(active)
     recipeLocation = textbox.get()
-    regex = re.compile("(<Recipe><_MOD_>\d{4}-\d{2}-\d{2}</_MOD_>.<F_R_NAME>"+active+"</F_R_NAME>.*?</Recipe>)", re.MULTILINE|re.DOTALL)
+    regex = re.compile("(<Recipe><_MOD_>\d{4}-\d{2}-\d{2}</_MOD_>.<F_R_NAME>"+reActive+"</F_R_NAME>.*?</Recipe>)", re.MULTILINE|re.DOTALL)
     bs_file = open(recipeLocation, 'r')
     text = bs_file.read()
     bs_file.close()
     match = regex.search(text)
     if not match:
-        messagebox.showerror("BeerSmith Recipe Lister", "No match or Selection")
+        messagebox.showerror("BeerSmith Recipe Lister", "No match or Selection named " + reactive)
         return
     else:
         try:
