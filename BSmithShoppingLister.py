@@ -50,9 +50,10 @@ def BuildList():
         try:
             step = "main"
             directory = os.path.expanduser("~") + "\\Desktop\\Recipes\\"
+            recipeName = ''.join(e for e in active if e.isalnum())
             if not os.path.exists(directory):
                 os.makedirs(directory)
-            out_file = open(directory + active+"_recipe.txt","w")
+            out_file = open(directory + recipeName +"Recipe.txt","w")
             out_file.write(active + " ingredients\n")
             out_file.write("\n")
             text = match.group(0)
@@ -213,8 +214,8 @@ def BuildList():
             # Close up shop
             step = "cleanup"
             out_file.close()
-            messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded\n\n" + "Output location: " + directory + active + "_recipe.txt")
-            os.startfile(directory + active+"_recipe.txt")
+            messagebox.showinfo("BeerSmith Recipe Lister", active + " recipe loaded.\n\n" + "Output location: " + directory + recipeName + "Recipe.txt")
+            os.startfile(directory + recipeName +"Recipe.txt")
         except:
             messagebox.showerror("BeerSmith Recipe Lister", "Error in " + step + ".\n\n" + str(sys.exc_info()[1]))
         return
